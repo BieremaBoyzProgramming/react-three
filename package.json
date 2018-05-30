@@ -1,12 +1,13 @@
 {
   "name": "react-three",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "index.js",
   "repository": "https://github.com/BieremaBoyzProgramming/react-three.git",
   "author": "Nathan Bierema <nbierema@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "react": "^16.4.0",
-    "react-reconciler": "^0.11.0"
+    "react-reconciler": "0.11.0",
+    "three": "0.92.0"
   }
 }
