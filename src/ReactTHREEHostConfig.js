@@ -1,15 +1,10 @@
 import * as THREE from 'three';
 import * as ReactScheduler from './react-scheduler';
-import invariant from 'fbjs/lib/invariant';
-import emptyObject from 'fbjs/lib/emptyObject';
-
-const UPDATE_SIGNAL = {};
 
 export function appendInitialChild(parentInstance, child) {
   if (typeof child === 'string') {
     // Noop for string children of Text (eg <Text>{'foo'}{'bar'}</Text>)
-    invariant(false, 'Text children should already be flattened.');
-    return;
+    throw new Error('Text children should already be flattened.');
   }
 
   child.inject(parentInstance);
@@ -22,8 +17,8 @@ export function createInstance(type, props, internalInstanceHandle) {
     case 'PerspectiveCamera':
       instance = new THREE.PerspectiveCamera(props.fov, props.aspect, props.near, props.far);
       break;
-    case 'WebGLRenderer':
-      instance = new THREE.WebGLRenderer();
+    case 'Scene':
+      instance = new THREE.Scene();
       break;
     case 'BoxGeometry':
       instance = new THREE.BoxGeometry(props.width, props.height, props.depth);
@@ -36,7 +31,7 @@ export function createInstance(type, props, internalInstanceHandle) {
       break;
   }
 
-  invariant(instance, 'ReactTHREE does not support the type "%s"', type);
+  if(!instance) throw new Error(`ReactTHREE does not support the type "${type}"`);
 
   return instance;
 }
@@ -62,7 +57,7 @@ export function prepareForCommit() {
 }
 
 export function prepareUpdate(domElement, type, oldProps, newProps) {
-  return UPDATE_SIGNAL;
+  return {};
 }
 
 export function resetAfterCommit() {
@@ -78,11 +73,11 @@ export function shouldDeprioritizeSubtree(type, props) {
 }
 
 export function getRootHostContext() {
-  return emptyObject;
+  return {};
 }
 
 export function getChildHostContext() {
-  return emptyObject;
+  return {};
 }
 
 export const scheduleDeferredCallback = ReactScheduler.scheduleWork;
@@ -116,18 +111,12 @@ export function appendChildToContainer(parentInstance, child) {
 }
 
 export function insertBefore(parentInstance, child, beforeChild) {
-  invariant(
-    child !== beforeChild,
-    'ReactTHREE: Can not insert node before itself',
-  );
+  if (child === beforeChild) throw new Error('ReactTHREE: Can not insert node before itself');
   child.injectBefore(beforeChild);
 }
 
 export function insertInContainerBefore(parentInstance, child, beforeChild) {
-  invariant(
-    child !== beforeChild,
-    'ReactTHREE: Can not insert node before itself',
-  );
+  if (child !== beforeChild) throw new Error('ReactTHREE: Can not insert node before itself');
   child.injectBefore(beforeChild);
 }
 

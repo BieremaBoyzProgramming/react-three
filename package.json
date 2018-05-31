@@ -1,14 +1,21 @@
 {
   "name": "react-three",
   "version": "0.1.0",
-  "main": "index.js",
+  "main": "dist/react-three.js",
   "repository": "https://github.com/BieremaBoyzProgramming/react-three.git",
   "author": "Nathan Bierema <nbierema@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "fbjs": "^0.8.16",
+  "peerDpendencies": {
     "react": "^16.4.0",
     "react-reconciler": "0.11.0",
     "three": "0.92.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "webpack": "^4.10.2",
+    "webpack-cli": "^2.1.4"
   }
 }
