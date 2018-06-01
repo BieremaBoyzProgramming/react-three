@@ -1,8 +1,8 @@
 {
-  "name": "react-three",
+  "name": "react-three-fiber",
   "version": "0.1.0",
-  "main": "dist/react-three.js",
-  "repository": "https://github.com/BieremaBoyzProgramming/react-three.git",
+  "main": "dist/react-three-fiber.js",
+  "repository": "https://github.com/BieremaBoyzProgramming/react-three-fiber.git",
   "author": "Nathan Bierema <nbierema@gmail.com>",
   "license": "MIT",
   "peerDpendencies": {
