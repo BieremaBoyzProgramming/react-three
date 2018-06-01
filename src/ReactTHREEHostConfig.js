@@ -2,32 +2,76 @@ import * as THREE from 'three';
 import * as ReactScheduler from './react-scheduler';
 
 export function appendInitialChild(parentInstance, child) {
-  if (typeof child === 'string') {
-    // Noop for string children of Text (eg <Text>{'foo'}{'bar'}</Text>)
-    throw new Error('Text children should already be flattened.');
+  if (parentInstance instanceof THREE.Mesh) {
+    if (child instanceof THREE.BoxGeometry) {
+      parentInstance.geometry = child;
+      return;
+    }
+    if (child instanceof THREE.MeshBasicMaterial) {
+      parentInstance.material = child;
+      return;
+    }
   }
+  if (parentInstance instanceof THREE.Scene) {
+    if (child instanceof THREE.Mesh) {
+      parentInstance.add(child);
+      return;
+    }
+  }
+  throw new Error(`Not implemented ${child.constructor.name}`);
+}
 
-  child.inject(parentInstance);
+function applySceneProps(instance, props, prevProps = {}) {
+
+}
+
+function applyPerspectiveCameraProps(instance, props, prevProps = {}) {
+
+}
+
+function applyBoxGeometryProps(instance, props, prevProps = {}) {
+
+}
+
+function applyMeshBasicMaterialProps(instance, props, prevProps = {}) {
+
+}
+
+function applyMeshProps(instance, props, prevProps = {}) {
+  instance.rotation.x = props.rotation.x;
+  instance.rotation.y = props.rotation.y;
+  instance.rotation.z = props.rotation.z;
 }
 
 export function createInstance(type, props, internalInstanceHandle) {
   let instance;
 
   switch (type) {
-    case 'PerspectiveCamera':
-      instance = new THREE.PerspectiveCamera(props.fov, props.aspect, props.near, props.far);
-      break;
     case 'Scene':
       instance = new THREE.Scene();
+      instance._applyProps = applySceneProps;
+      break;
+    case 'PerspectiveCamera':
+      instance = new THREE.PerspectiveCamera(props.fov, props.aspect, props.near, props.far);
+      instance.position.x = props.position.x;
+      instance.position.y = props.position.y;
+      instance.position.z = props.position.z;
+      instance._applyProps = applyPerspectiveCameraProps;
       break;
     case 'BoxGeometry':
       instance = new THREE.BoxGeometry(props.width, props.height, props.depth);
+      instance._applyProps = applyBoxGeometryProps;
       break;
     case 'MeshBasicMaterial':
-      instance = new THREE.MeshBasicMaterial(props.color);
+      instance = new THREE.MeshBasicMaterial({ color: props.color });
+      instance._applyProps = applyMeshBasicMaterialProps;
       break;
     case 'Mesh':
-      instance = new THREE.Mesh(props.geometry, props.material);
+      instance = new THREE.Mesh();
+      instance.rotation.x = props.rotation.x;
+      instance.rotation.y = props.rotation.y;
+      instance.rotation.z = props.rotation.z;
+      instance._applyProps = applyMeshProps;
       break;
   }
 
@@ -91,12 +135,13 @@ export function shouldSetTextContent(type, props) {
 
 export const now = ReactScheduler.now;
 
-// The ART renderer is secondary to the React DOM renderer.
+// The THREE renderer is secondary to the React DOM renderer.
 export const isPrimaryRenderer = false;
 
 export const supportsMutation = true;
 
 export function appendChild(parentInstance, child) {
+  throw new Error('Not implemented');
   if (child.parentNode === parentInstance) {
     child.eject();
   }
@@ -104,27 +149,38 @@ export function appendChild(parentInstance, child) {
 }
 
 export function appendChildToContainer(parentInstance, child) {
-  if (child.parentNode === parentInstance) {
-    child.eject();
+  if (parentInstance instanceof THREE.WebGLRenderer) {
+    if (child instanceof THREE.Scene) {
+      parentInstance._scene = child;
+      return;
+    }
+    if (child instanceof THREE.PerspectiveCamera) {
+      parentInstance._camera = child;
+      return;
+    }
   }
-  child.inject(parentInstance);
+  throw new Error(`Not implemented ${child.constructor.name}`);
 }
 
 export function insertBefore(parentInstance, child, beforeChild) {
+  throw new Error('Not implemented');
   if (child === beforeChild) throw new Error('ReactTHREE: Can not insert node before itself');
   child.injectBefore(beforeChild);
 }
 
 export function insertInContainerBefore(parentInstance, child, beforeChild) {
+  throw new Error('Not implemented');
   if (child !== beforeChild) throw new Error('ReactTHREE: Can not insert node before itself');
   child.injectBefore(beforeChild);
 }
 
 export function removeChild(parentInstance, child) {
+  throw new Error('Not implemented');
   child.eject();
 }
 
 export function removeChildFromContainer(parentInstance, child) {
+  throw new Error('Not implemented');
   child.eject();
 }
 

@@ -14,11 +14,25 @@ export class WebGLRenderer extends React.Component {
 
   componentDidMount() {
     this._webGLRenderer = new THREE.WebGLRenderer({ canvas: this._canvasRef.current });
+    this._webGLRenderer.setSize(this.props.width, this.props.height);
 
     this._mountNode = THREERenderer.createContainer(this._webGLRenderer);
     THREERenderer.updateContainer(this.props.children, this._mountNode, this);
 
-    this._webGLRenderer.render(this.props.children._scene, this.props.children._camera);
+    const animate = () => {
+      window.requestAnimationFrame(animate);
+      this.props.onAnimate();
+    };
+
+    animate();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const props = this.props;
+
+    THREERenderer.updateContainer(this.props.children, this._mountNode, this);
+
+    this._webGLRenderer.render(this._webGLRenderer._scene, this._webGLRenderer._camera);
   }
 
   componentWillUnmount() {
@@ -34,3 +48,7 @@ export class WebGLRenderer extends React.Component {
 }
 
 export const Scene = 'Scene';
+export const PerspectiveCamera = 'PerspectiveCamera';
+export const Mesh = 'Mesh';
+export const BoxGeometry = 'BoxGeometry';
+export const MeshBasicMaterial = 'MeshBasicMaterial';
